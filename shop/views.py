@@ -8,11 +8,12 @@ import string
 import configparser
 
 # put configuration from config.ini file into variables
+cwd= os.getcwd()
 config = configparser.ConfigParser()
-config.read("config.ini")
-MAX = config.get("id_config", "MAX")
-MIN = config.get("id_config", "MIN")
-TRIALS = config.get("id_config", "TRIALS")
+config.read(cwd + '/config.ini')
+MAX = int(config.get('id_config', 'MAX'))
+MIN = int(config.get('id_config', "MIN"))
+TRIALS = int(config.get("id_config", "TRIALS"))
 
 
 def get_id_with_fixed_size(size):
@@ -22,7 +23,7 @@ def get_id_with_fixed_size(size):
         id = id + (random.SystemRandom().choice(string.ascii_lowercase + string.digits))
     return id
 
-def get_unique_id(MIN, MAX, TRIALS):
+def get_unique_id(MAX, MIN, TRIALS):
     # loop trial times 
     for _ in range(TRIALS):
         # get cryptographly safe random int (underlying os.urandom()) for the size of the id
@@ -39,6 +40,7 @@ def get_unique_id(MIN, MAX, TRIALS):
     return id
         
 def increment_max():
+    MAX = MAX +1
     config.set("id_config", "MAX", MAX)
 
 def basic(request):
@@ -49,7 +51,7 @@ def basic(request):
 
 def createScan(request):
     #creating the id
-    id = get_unique_id(MIN, MAX, TRIALS)
+    id = get_unique_id(MAX, MIN , TRIALS)
     scan = Scan.objects.create(sizeid=id, last_activity=date.today())
     return render(request,"shopfront.html", {'result':'Your new size ID is %s'%(scan.sizeid)} )
 
@@ -60,7 +62,7 @@ def getScan(request):
     #get the desired scan
     scan = Scan.objects.filter(sizeid = request.POST.get('sizeid_input')).first()
     if scan is None:
-        return render(request,"shopfront.html", {'result':'This size id was not found or was duplicated.'})
+        return render(request,"shopfront.html", {'result':'This size id was not found'})
 
     #check if the scan is usable
     #get number of days between today and last use
