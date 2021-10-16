@@ -36,10 +36,10 @@ def get_unique_id(MAX, MIN, TRIALS):
             return id
     id = get_id_with_fixed_size(N+1)
     MAX = MAX +1;
-    increment_max()
+    increment_max(MAX)
     return id
         
-def increment_max():
+def increment_max(MAX):
     MAX = MAX +1
     config.set("id_config", "MAX", MAX)
 
