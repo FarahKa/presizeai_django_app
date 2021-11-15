@@ -18,8 +18,8 @@ from django.urls import path
 from shop import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', views.basic),
-    path('createScan/', views.createScan),
-    path('getScan/', views.getScan)
+    path('admin/', admin.site.urls, name='admin'),
+    path('', views.basic, name='basic'),
+    path('createScan/', views.createScan, name='create_scan'),
+    path('getScan/', views.getScan, name="get_scan")
 ]
